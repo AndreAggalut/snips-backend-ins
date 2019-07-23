@@ -1,0 +1,23 @@
+{
+  "name": "snips-backend",
+  "version": "1.0.0",
+  "description": "Backend for Snips app. Built with MVC architecture and a file-based DB.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talent-path-la/snips-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/talent-path-la/snips-backend/issues"
+  },
+  "homepage": "https://github.com/talent-path-la/snips-backend#readme",
+  "dependencies": {
+    "shortid": "^2.2.14"
+  }
+}
