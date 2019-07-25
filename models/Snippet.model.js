@@ -1,8 +1,11 @@
+/* eslint-disable no-prototype-builtins */
 const fs = require('fs').promises;
 const path = require('path');
 const shortid = require('shortid');
+const { readJsonFromDb, writeJsonToDb } = require('../utils/db.utils');
 
 /**
+ * a snippet object
  * @typedef {Object} Snippet
  * @property {string} id
  * @property {string} author
@@ -23,9 +26,9 @@ exports.insert = async ({ author, code, title, description, language }) => {
   try {
     if (!author || !code || !title || !description || !language)
       throw Error('Missing properties');
+
     // read snippets.json
-    const dbpath = path.join(__dirname, '..', 'db', 'snippets.json');
-    const snippets = JSON.parse(await fs.readFile(dbpath));
+    const snippets = await readJsonFromDb('snippets');
     // grab data from newSnippet (validate)
     // make newSnippet a proper object
     // generate default data (id, comments, favorites)
@@ -41,7 +44,7 @@ exports.insert = async ({ author, code, title, description, language }) => {
       favorites: 0,
     });
     // write back to the file
-    await fs.writeFile(dbpath, JSON.stringify(snippets));
+    await writeJsonToDb('snippets', snippets);
     return snippets[snippets.length - 1];
   } catch (err) {
     console.log(err);
@@ -59,8 +62,7 @@ exports.select = async (query = {}) => {
   try {
     // 1. read the file
     // 2. parse it
-    const dbpath = path.join(__dirname, '..', 'db', 'snippets.json');
-    const snippets = JSON.parse(await fs.readFile(dbpath));
+    const snippets = await readJsonFromDb('snippets');
     // filter snippets with query
     // check if every query key
     // snippet[key] === query[key]
@@ -76,5 +78,33 @@ exports.select = async (query = {}) => {
 };
 
 /* Update */
+exports.update = async (id, newData) => {
+  // 1. read file
+  const snippets = await readJsonFromDb('snippets');
+  // 2. find the snippet with id
+  // 3. update the snippet with appropriate data (make sure to validate!)
+  const updatedSnippets = snippets.map(snippet => {
+    // if it's not the one we want, just return it
+    if (snippet.id !== id) return snippet;
+
+    // loop over keys in newData
+    Object.keys(newData).forEach(key => {
+      // check if snippet has that key and set it
+      if (key in snippet) snippet[key] = newData[key];
+    });
+    return snippet;
+  });
+  // 4. write back to db
+  return writeJsonToDb('snippets', updatedSnippets);
+};
 
 /* Delete */
+exports.delete = async id => {
+  // Read in the db file
+  const snippets = await readJsonFromDb('snippets');
+  // filter snippets for everything except snippet.id
+  const filteredSnips = snippets.filter(snippet => snippet.id !== id);
+  if (filteredSnips.length === snippets.length) return; // short circuit if id DNE
+  // write the file
+  return writeJsonToDb('snippets', filteredSnips);
+};

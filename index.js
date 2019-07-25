@@ -1,8 +1,6 @@
 const Snippet = require('./models/Snippet.model');
 
-async function testModels() {
-  // const snippets = await Snippet.select();
-  // console.log(snippets);
+async function testSnippetInsert() {
   try {
     const newSnippet = await Snippet.insert({
       author: 'CJ',
@@ -17,4 +15,15 @@ async function testModels() {
   }
 }
 
-testModels();
+async function testSnippetSelect() {
+  const snippets = await Snippet.select();
+  console.log(snippets);
+}
+
+async function testSnippetDelete() {
+  Snippet.delete();
+}
+
+// testSnippetSelect();
+// testSnippetInsert();
+testSnippetDelete();
