@@ -1,29 +1,17 @@
-const Snippet = require('./models/Snippet.model');
+const express = require('express');
+const logger = require('./middleware/logger');
+const router = require('./middleware/routes');
+const errorHandler = require('./middleware/errorHandler');
 
-async function testSnippetInsert() {
-  try {
-    const newSnippet = await Snippet.insert({
-      author: 'CJ',
-      code: 'code code code',
-      title: 'test.js',
-      description: 'this works great!',
-      language: 'javascript',
-    });
-    console.log(newSnippet);
-  } catch (err) {
-    console.error(err);
-  }
-}
+const app = express();
 
-async function testSnippetSelect() {
-  const snippets = await Snippet.select();
-  console.log(snippets);
-}
+/* Middleware */
+app.use(express.json()); // parses requests with JSON payloads
+app.use(logger);
+app.use(router);
+app.use(errorHandler);
 
-async function testSnippetDelete() {
-  Snippet.delete();
-}
-
-// testSnippetSelect();
-// testSnippetInsert();
-testSnippetDelete();
+/* Now start our app */
+app.listen(5000, () => {
+  console.log('Snips server running on port 5000');
+});

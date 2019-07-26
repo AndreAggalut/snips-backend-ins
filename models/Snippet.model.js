@@ -1,8 +1,6 @@
-/* eslint-disable no-prototype-builtins */
-const fs = require('fs').promises;
-const path = require('path');
 const shortid = require('shortid');
 const { readJsonFromDb, writeJsonToDb } = require('../utils/db.utils');
+const ErrorWithHttpStatus = require('../utils/ErrorWithHttpStatus');
 
 /**
  * a snippet object
@@ -25,7 +23,7 @@ const { readJsonFromDb, writeJsonToDb } = require('../utils/db.utils');
 exports.insert = async ({ author, code, title, description, language }) => {
   try {
     if (!author || !code || !title || !description || !language)
-      throw Error('Missing properties');
+      throw new ErrorWithHttpStatus('Missing properties', 400);
 
     // read snippets.json
     const snippets = await readJsonFromDb('snippets');
@@ -47,14 +45,15 @@ exports.insert = async ({ author, code, title, description, language }) => {
     await writeJsonToDb('snippets', snippets);
     return snippets[snippets.length - 1];
   } catch (err) {
-    console.log(err);
-    throw err;
+    if (err instanceof ErrorWithHttpStatus) throw err;
+    else throw new ErrorWithHttpStatus('Database error');
   }
 };
 
 /**
- * Selects snippets from db.
- * Can accept optional query object to filter results.
+ * Selects snippets from DB.
+ * Can accept optional query object to filter results;
+ * otherwise, returns all snippets.
  * @param {Object} [query]
  * @returns {Promise<Snippet[]>} array of Snippet objects
  */
@@ -72,13 +71,18 @@ exports.select = async (query = {}) => {
     // 3. return the data
     return filtered;
   } catch (err) {
-    console.log('ERROR in Snippet model');
-    throw err;
+    throw new ErrorWithHttpStatus('Database error');
   }
 };
 
-/* Update */
+/**
+ * Updates a snippet
+ * @param {string} id - id of the snippet to update
+ * @param {Snippet} newData - subset of values to update
+ */
 exports.update = async (id, newData) => {
+  // TODO: error on id not found
+
   // 1. read file
   const snippets = await readJsonFromDb('snippets');
   // 2. find the snippet with id
@@ -91,6 +95,7 @@ exports.update = async (id, newData) => {
     Object.keys(newData).forEach(key => {
       // check if snippet has that key and set it
       if (key in snippet) snippet[key] = newData[key];
+      // TODO: 400 error on key DNE
     });
     return snippet;
   });
@@ -98,13 +103,18 @@ exports.update = async (id, newData) => {
   return writeJsonToDb('snippets', updatedSnippets);
 };
 
-/* Delete */
+/**
+ * Deletes a snippet
+ * @param {string} id
+ */
 exports.delete = async id => {
   // Read in the db file
   const snippets = await readJsonFromDb('snippets');
   // filter snippets for everything except snippet.id
   const filteredSnips = snippets.filter(snippet => snippet.id !== id);
-  if (filteredSnips.length === snippets.length) return; // short circuit if id DNE
+  if (filteredSnips.length === snippets.length) return; // short circuit if id not found
+  // TODO: error if trying to delete a snippet DNE
+
   // write the file
   return writeJsonToDb('snippets', filteredSnips);
 };
