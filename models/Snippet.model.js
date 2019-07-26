@@ -81,26 +81,36 @@ exports.select = async (query = {}) => {
  * @param {Snippet} newData - subset of values to update
  */
 exports.update = async (id, newData) => {
-  // TODO: error on id not found
+  try {
+    // 1. read file
+    const snippets = await readJsonFromDb('snippets');
+    // 2. find the snippet with id
+    let found = false;
+    // 3. update the snippet with appropriate data (make sure to validate!)
+    const updatedSnippets = snippets.map(snippet => {
+      // if it's not the one we want, just return it
+      if (snippet.id !== id) return snippet;
 
-  // 1. read file
-  const snippets = await readJsonFromDb('snippets');
-  // 2. find the snippet with id
-  // 3. update the snippet with appropriate data (make sure to validate!)
-  const updatedSnippets = snippets.map(snippet => {
-    // if it's not the one we want, just return it
-    if (snippet.id !== id) return snippet;
-
-    // loop over keys in newData
-    Object.keys(newData).forEach(key => {
-      // check if snippet has that key and set it
-      if (key in snippet) snippet[key] = newData[key];
-      // TODO: 400 error on key DNE
+      // else we found what we're looking for
+      found = true;
+      // loop over keys in newData
+      Object.keys(newData).forEach(key => {
+        // check if snippet has that key and set it
+        if (key in snippet) snippet[key] = newData[key];
+        else throw new ErrorWithHttpStatus(`Invalid property ${key}`, 400);
+      });
+      return snippet;
     });
-    return snippet;
-  });
-  // 4. write back to db
-  return writeJsonToDb('snippets', updatedSnippets);
+
+    if (!found)
+      throw new ErrorWithHttpStatus(`Snippet with ID ${id} not found`, 404);
+
+    // 4. write back to db
+    return writeJsonToDb('snippets', updatedSnippets);
+  } catch (err) {
+    if (err instanceof ErrorWithHttpStatus) throw err;
+    else throw new ErrorWithHttpStatus('Database error', 500);
+  }
 };
 
 /**
@@ -108,13 +118,18 @@ exports.update = async (id, newData) => {
  * @param {string} id
  */
 exports.delete = async id => {
-  // Read in the db file
-  const snippets = await readJsonFromDb('snippets');
-  // filter snippets for everything except snippet.id
-  const filteredSnips = snippets.filter(snippet => snippet.id !== id);
-  if (filteredSnips.length === snippets.length) return; // short circuit if id not found
-  // TODO: error if trying to delete a snippet DNE
+  try {
+    // Read in the db file
+    const snippets = await readJsonFromDb('snippets');
+    // filter snippets for everything except snippet.id
+    const filteredSnips = snippets.filter(snippet => snippet.id !== id);
+    if (filteredSnips.length === snippets.length)
+      throw new ErrorWithHttpStatus(`Snippet with ID ${id} not found`, 404); // short circuit if id not found
 
-  // write the file
-  return writeJsonToDb('snippets', filteredSnips);
+    // write the file
+    return writeJsonToDb('snippets', filteredSnips);
+  } catch (err) {
+    if (err instanceof ErrorWithHttpStatus) throw err;
+    else throw new ErrorWithHttpStatus('Database error', 500);
+  }
 };

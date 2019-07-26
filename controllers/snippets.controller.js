@@ -35,3 +35,21 @@ exports.getSnippetById = async ({ params: { id } }, response, next) => {
     next(err);
   }
 };
+
+exports.update = async ({ params: { id }, body }, response, next) => {
+  try {
+    await Snippet.update(id, body);
+    response.send();
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.delete = async ({ params: { id } }, response, next) => {
+  try {
+    await Snippet.delete(id);
+    response.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};
