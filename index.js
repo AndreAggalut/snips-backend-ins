@@ -7,8 +7,7 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 /* Middleware */
-// TODO: Add CORS with all origins for testing
-app.use(cors());
+app.use(cors()); // enables cors policy for network request/responses
 app.use(express.json()); // parses requests with JSON payloads
 app.use(logger);
 app.use(router);
