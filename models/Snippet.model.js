@@ -107,6 +107,7 @@ exports.select = async query => {
     return filtered;
     */
   } catch (err) {
+    console.log(err);
     throw new ErrorWithHttpStatus('Database error');
   }
 };
