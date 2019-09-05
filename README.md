@@ -4,6 +4,7 @@ Backend for Snips app.
 Built with MVC architecture and a file-based DB.
 
 ## Setup
+
 1. Clone
 2. `$ npm install`
 3. `$ npm run dev`
@@ -269,3 +270,7 @@ Express!!
     ```
 
   - All routes should look something like the one above.
+
+### PostgreSQL
+
+-
