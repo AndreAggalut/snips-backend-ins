@@ -1,6 +1,5 @@
 const format = require('pg-format');
 const db = require('../db');
-const { readJsonFromDb, writeJsonToDb } = require('../utils/db.utils');
 const ErrorWithHttpStatus = require('../utils/ErrorWithHttpStatus');
 
 /**
@@ -92,20 +91,6 @@ exports.select = async query => {
     const result = await db.query(sql, Object.values(query));
     return result.rows;
     */
-
-    /* Old file-based method
-    // 1. read the file
-    // 2. parse it
-    const snippets = await readJsonFromDb('snippets');
-    // filter snippets with query
-    // check if every query key
-    // snippet[key] === query[key]
-    const filtered = snippets.filter(snippet =>
-      Object.keys(query).every(key => query[key] === snippet[key])
-    );
-    // 3. return the data
-    return filtered;
-    */
   } catch (err) {
     console.log(err);
     throw new ErrorWithHttpStatus('Database error');
@@ -132,34 +117,6 @@ exports.update = async (id, newData) => {
       WHERE id = ($1)`,
       [id, author, code, title, description, language]
     );
-
-    /*
-    // 1. read file
-    const snippets = await readJsonFromDb('snippets');
-    // 2. find the snippet with id
-    let found = false;
-    // 3. update the snippet with appropriate data (make sure to validate!)
-    const updatedSnippets = snippets.map(snippet => {
-      // if it's not the one we want, just return it
-      if (snippet.id !== id) return snippet;
-
-      // else we found what we're looking for
-      found = true;
-      // loop over keys in newData
-      Object.keys(newData).forEach(key => {
-        // check if snippet has that key and set it
-        if (key in snippet) snippet[key] = newData[key];
-        else throw new ErrorWithHttpStatus(`Invalid property ${key}`, 400);
-      });
-      return snippet;
-    });
-
-    if (!found)
-      throw new ErrorWithHttpStatus(`Snippet with ID ${id} not found`, 404);
-
-    // 4. write back to db
-    return writeJsonToDb('snippets', updatedSnippets);
-    */
   } catch (err) {
     if (err instanceof ErrorWithHttpStatus) throw err;
     else throw new ErrorWithHttpStatus('Database error', 500);
