@@ -18,7 +18,7 @@ exports.insert = ({ password, name }) => {
 exports.select = async name => {
   try {
     const sql = `SELECT * FROM author WHERE name = $1`;
-    const result = await db.query(sql, name);
+    const result = await db.query(sql, [name]);
     return result.rows[0];
   } catch (err) {
     throw new ErrorWithHttpStatus('Database error');
