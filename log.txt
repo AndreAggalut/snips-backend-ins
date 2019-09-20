@@ -195,3 +195,6 @@ GET /api/snippets | 1567724234772
 GET /api/snippets | 1567724243840
 GET /api/snippets | 1568052812729
 GET /favicon.ico | 1568052812874
+POST /api/signup | 1568927404170
+POST /api/signup | 1568928870488
+POST /api/signup | 1568930801581
