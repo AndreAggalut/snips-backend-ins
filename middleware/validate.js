@@ -13,6 +13,6 @@ module.exports = (request, response, next) => {
     next();
   } catch (error) {
     // else die if bad
-    response.send(401);
+    response.sendStatus(401);
   }
 };

@@ -21,6 +21,7 @@ exports.login = async (request, response, next) => {
   try {
     // 1. get the author
     const author = await Author.select(request.body.name);
+    console.log(author);
     // 2. check if they exist
     if (!author) throw new ErrorWithHttpStatus('User does not exist', 404);
 
@@ -29,6 +30,7 @@ exports.login = async (request, response, next) => {
       request.body.password,
       author.password
     );
+    console.log(isMatch);
     if (!isMatch) throw new ErrorWithHttpStatus('Incorrect password', 401);
 
     // 4. sign a json web token
