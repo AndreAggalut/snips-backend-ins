@@ -16,7 +16,7 @@ describe('Snippets', () => {
       // test the /api/snips route
       const response = await request(app).get('/api/snippets');
       // expect two rows of data
-      expect(response.body.length).toBe(3);
+      expect(response.body.length).toBe(2);
       // no errors
       expect(response.error).toBeFalsy();
       // status code should be 200
