@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snippets GET /api/snippets should get all of the snips 1`] = `
+Array [
+  Object {
+    "author": "Dandy",
+    "code": "const america = 1776",
+    "description": "I declared a const",
+    "favorites": 0,
+    "id": 1,
+    "language": "JavaScript",
+    "title": "freedom",
+  },
+  Object {
+    "author": "Scott",
+    "code": "4 + 4",
+    "description": "This is how you add",
+    "favorites": 0,
+    "id": 2,
+    "language": "Algebra",
+    "title": "addition",
+  },
+]
+`;

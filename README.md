@@ -273,4 +273,15 @@ Express!!
 
 ### PostgreSQL
 
--
+### Testing
+
+1. install `jest` and `supertest`
+2. add testing to npm scripts
+3. spin up testing database
+4. use `NODE_ENV` to decide which db to use
+
+### CI/CD
+
+1. signup for TravisCI
+2. link repo
+3. Create `.travis.yml` with node and postgres addon
