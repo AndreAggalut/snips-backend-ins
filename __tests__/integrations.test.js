@@ -15,7 +15,7 @@ describe('Snippets', () => {
     it('should get all of the snips', async () => {
       // test the /api/snips route
       const response = await request(app).get('/api/snippets');
-      // expect two rows
+      // expect two rows of data
       expect(response.body.length).toBe(2);
       // no errors
       expect(response.error).toBeFalsy();
