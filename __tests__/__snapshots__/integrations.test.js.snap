@@ -3,7 +3,7 @@
 exports[`Snippets GET /api/snippets should get all of the snips 1`] = `
 Array [
   Object {
-    "author": "Dandy",
+    "author": "Scott",
     "code": "const america = 1776",
     "description": "I declared a const",
     "favorites": 0,

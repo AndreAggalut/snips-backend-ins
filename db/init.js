@@ -47,10 +47,10 @@ exports.seedSnippets = () =>
       'freedom',
       'I declared a const',
       'JavaScript',
-      'Dandy'
+      'Scott'
     ),
     (
-      '4 + 4',
+      '4 + 2',
       'addition',
       'This is how you add',
       'Algebra',
