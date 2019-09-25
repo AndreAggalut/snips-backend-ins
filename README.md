@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/talent-path-snips/server.svg?branch=master)](https://travis-ci.org/talent-path-snips/server)
+
 # Snips ✂️ Backend
 
 Backend for Snips app.
