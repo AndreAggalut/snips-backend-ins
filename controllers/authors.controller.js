@@ -6,6 +6,7 @@ const ErrorWithHttpStatus = require('../utils/ErrorWithHttpStatus');
 exports.signup = async (request, response, next) => {
   try {
     // hash the password
+    console.log(request.body.name, request.body.password);
     const hashedPassword = await bcrypt.hash(request.body.password, 2);
     await Author.insert({
       name: request.body.name,
@@ -13,6 +14,7 @@ exports.signup = async (request, response, next) => {
     });
     response.status(201).send('Signed up!');
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };

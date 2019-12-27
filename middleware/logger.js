@@ -9,7 +9,7 @@ const path = require('path');
  * @param {function} next
  * @example GET / 232534534535
  */
-function logger(request, response, next) {
+const logger = (request, response, next) => {
   const info = `${request.method} ${request.path} | ${Date.now()}\n`;
   const filePath = path.join(__dirname, '..', 'log.txt');
   try {
@@ -22,6 +22,14 @@ function logger(request, response, next) {
     // next calls the next piece of middleware
     next();
   }
-}
+};
 
-module.exports = logger;
+const consoleLogger = (request, response, next) => {
+  console.log(request.method);
+  next();
+};
+
+module.exports = {
+  logger,
+  consoleLogger,
+};

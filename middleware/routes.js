@@ -5,9 +5,9 @@ const validate = require('./validate');
 
 const router = express.Router();
 
-const logger = require('./logger');
+const { consoleLogger } = require('./logger');
 
-router.get('/', logger, (request, response, next) => {
+router.get('/', consoleLogger, (request, response, next) => {
   response.send('Welcome to Snips!');
 });
 

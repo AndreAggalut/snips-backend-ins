@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const logger = require('./middleware/logger');
+const { logger } = require('./middleware/logger');
 const router = require('./middleware/routes');
 const errorHandler = require('./middleware/errorHandler');
 
